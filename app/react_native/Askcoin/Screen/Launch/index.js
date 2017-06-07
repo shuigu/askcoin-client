@@ -15,12 +15,73 @@ import {
   ThemeImages,
 } from './../../Theme'
 
+import {ApiSelectView} from './../../Component/Launch'
+
+// 小于3都是失败
+let connectErrorCount = 1;
+
 class Launch extends Component {
+  // 构造
+  constructor(props) {
+    super(props);
+    // 初始状态
+    this.state = {
+      isShowApiList:false,
+      connectAnimating:false,
+    };
+  }
   componentDidMount() {
-    let mainRoute = this.props.screens.Main.routeKey;
+    this.connectApi(false);
+  }
+  /**
+   * 连接api服务器
+   * */
+  connectApi(animation){
+    if (animation){
+      this.setState({
+        connectAnimating:true,
+      });
+    }
+    let time = 2000;
     setTimeout(()=>{
-      this.props.navigator.push({screen:mainRoute});
-    },3000);
+
+      if (animation){
+        this.setState({
+          connectAnimating:false,
+        });
+      }
+
+      let succeed = connectErrorCount++>=3?true:false;
+      if(succeed){
+        this.onConnectApiSucceed();
+      }else{
+        this.onConnectApiFault();
+      }
+    },time);
+  }
+  onConnectApiSucceed(){
+    let mainRoute = this.props.screens.Main.routeKey;
+    this.props.navigator.push({screen:mainRoute});
+  }
+  onConnectApiFault(){
+    this.setState({
+      isShowApiList:true,
+    });
+  }
+  onSelectApi(){
+    this.connectApi(true);
+  }
+  renderBottomView(){
+    if(this.state.isShowApiList){
+      return (
+        <View style={styles.apiSelectView}>
+          <ApiSelectView showActivityIndicator={this.state.connectAnimating} onSelectApi={this.onSelectApi.bind(this)}/>
+        </View>
+      );
+
+    }else{
+      return <Image style={styles.bigImage} source={ThemeImages.commonImages.posterImage}/>
+    }
   }
   render() {
     return (
@@ -33,7 +94,9 @@ class Launch extends Component {
           </View>
         </View>
         <View style={styles.bottomView}>
-          <Image style={styles.bigImage} source={ThemeImages.commonImages.posterImage}/>
+          {
+           this.renderBottomView()
+          }
         </View>
       </View>
     );
@@ -59,10 +122,13 @@ const styles = StyleSheet.create({
   bottomView:{
     flex:1
   },
+  apiSelectView:{
+    marginTop:Grid.a*5
+  },
   bigImage:{
     width:6*Grid.A,
     height:10*Grid.A,
     resizeMode:'contain'
-  }
+  },
 });
 module.exports = Launch;
