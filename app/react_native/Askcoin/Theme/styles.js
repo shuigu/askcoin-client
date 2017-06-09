@@ -1,8 +1,6 @@
 /**
  * Created by zhuguoqing on 2017/5/5.
  */
-
-
 import  colors from './colors'
 module.exports = {
   rootView:{

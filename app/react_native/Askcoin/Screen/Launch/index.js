@@ -14,12 +14,17 @@ import {
   ThemeStyles,
   ThemeImages,
 } from './../../Theme'
+import {
+  ApiSelectView
+} from './../../Component/Launch'
+import {
+  LogoView
+} from './../../Component/Common'
 
-import {ApiSelectView} from './../../Component/Launch'
 
 // 小于3都是失败
 let connectErrorCount = 1;
-
+let connectErrorMaxCount = 2
 class Launch extends Component {
   // 构造
   constructor(props) {
@@ -33,6 +38,15 @@ class Launch extends Component {
   componentDidMount() {
     this.connectApi(false);
   }
+  pushMainScreen(){
+    let route = this.props.screens.Main.routeKey;
+    this.props.navigator.push({screen:route});
+  }
+  pushRegisterScreen(){
+    let route = this.props.screens.Register.routeKey;
+    this.props.navigator.push({screen:route});
+  }
+
   /**
    * 连接api服务器
    * */
@@ -42,7 +56,7 @@ class Launch extends Component {
         connectAnimating:true,
       });
     }
-    let time = 2000;
+    let time = 1000;
     setTimeout(()=>{
 
       if (animation){
@@ -50,8 +64,7 @@ class Launch extends Component {
           connectAnimating:false,
         });
       }
-
-      let succeed = connectErrorCount++>=3?true:false;
+      let succeed = connectErrorCount++>=connectErrorMaxCount?true:false;
       if(succeed){
         this.onConnectApiSucceed();
       }else{
@@ -60,8 +73,12 @@ class Launch extends Component {
     },time);
   }
   onConnectApiSucceed(){
-    let mainRoute = this.props.screens.Main.routeKey;
-    this.props.navigator.push({screen:mainRoute});
+    let register = false;
+    if(register){
+      this.pushMainScreen();
+    }else{
+      this.pushRegisterScreen();
+    }
   }
   onConnectApiFault(){
     this.setState({
@@ -87,12 +104,9 @@ class Launch extends Component {
     return (
       <View style={ThemeStyles.defaultContainer}>
         <View style={styles.topView}>
-          <Image style={styles.logoImage} source={ThemeImages.commonImages.logoImage}/>
-          <View style={styles.textView}>
-            <Text style={styles.text}>ask anyone, anything,</Text>
-            <Text style={styles.text}>from anywhere.</Text>
-          </View>
+          <LogoView/>
         </View>
+
         <View style={styles.bottomView}>
           {
            this.renderBottomView()
@@ -105,19 +119,6 @@ class Launch extends Component {
 const styles = StyleSheet.create({
   topView:{
     marginTop:Grid.a*15,
-    alignItems:'center',
-  },
-  logoImage:{
-    width:12*Grid.a,
-    height:12*Grid.a,
-    resizeMode:'contain'
-  },
-  textView:{
-    marginTop:Grid.a*2,
-    alignItems:'center',
-  },
-  text:{
-    fontSize:Grid.a*2.5,
   },
   bottomView:{
     flex:1

@@ -17,6 +17,7 @@ class Askcoin extends Component {
     return {
       screen:Screens.Launch.routeKey
       // screen:Screens.Main.routeKey
+      // screen:Screens.Register.routeKey
     }
   };
   renderScene(route, navigator){
@@ -33,6 +34,7 @@ class Askcoin extends Component {
       <Navigator
         initialRoute={this.initialRoute()}
         renderScene={this.renderScene.bind(this)}
+        configureScene={()=>Navigator.SceneConfigs.FloatFromRight}
       />
     );
   }

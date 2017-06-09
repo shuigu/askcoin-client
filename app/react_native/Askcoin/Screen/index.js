@@ -8,11 +8,13 @@ import Main   from './Main'
 import Responder from './Responder'
 import Transfer from './Transfer'
 import Mine from './Mine'
+import Register from './Register'
 
 /**
  * routeKey用来定位rootComponent的
  * 所以routeKey要与rootComponent的上一层key一致
  * */
+
 module.exports  = {
   Launch: {
     rootComponent: Launch,
@@ -35,5 +37,11 @@ module.exports  = {
   Responder:{
     rootComponent: Responder,
     description: '抢答'
+  },
+  Register:{
+    rootComponent:Register,
+    routeKey: 'Register',
+    description: '注册',
   }
+
 }

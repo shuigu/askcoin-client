@@ -14,7 +14,9 @@ import {
   Grid,
   ThemeStyles,
 } from './../../Theme'
-
+import {
+  ASKButton
+} from './../Common'
 class ApiSelectView extends  Component {
   onEnterCommunity(){
     if (this.props.onSelectApi){
@@ -39,9 +41,11 @@ class ApiSelectView extends  Component {
         <View style={styles.activityIndicatorView}>
           {this.renderActivityIndicator()}
         </View>
-        <TouchableOpacity onPress={this.onEnterCommunity.bind(this)}>
-          <Text>进入问答社区</Text>
-        </TouchableOpacity>
+        <ASKButton
+          onPress={this.onEnterCommunity.bind(this)}
+          style={styles.button}>
+          进入问答社区
+        </ASKButton>
       </View>
     );
   }
@@ -63,6 +67,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 8,
   },
+  button:{
+    width:Grid.a*20.0,
+    height:Grid.a*4.0,
+  }
 
 });
 module.exports = ApiSelectView
